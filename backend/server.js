@@ -5,13 +5,25 @@ import { transcribeVideo } from './transcribeVideo.js';
 
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'; // Default to localhost in development
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 
 // Configure dotenv
 dotenv.config();
 const app = express();
-app.use(cors({
-  origin: FRONTEND_URL, 
-}));
+
+
+if (isDevelopment) {
+  // Only use CORS in development
+  app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  }));
+} else {
+  // In production, you can either remove CORS or use a simpler configuration
+  app.use(cors());
+}
+
+
 app.use(express.json());
 
 
